@@ -41,7 +41,8 @@ define(function () {
 
         function updateUi() {
           // Look for a predefined command.
-          var command = scribe.getCommand(button.dataset.commandName);
+          var commandName = button.dataset.commandName;
+          var command = scribe.getCommand(commandName);
 
           var selection = new scribe.api.Selection();
 
@@ -52,7 +53,10 @@ define(function () {
             button.classList.remove('active');
           }
 
-          if (selection.range && command.queryEnabled()) {
+          var enabled = scribe.options.hasOwnProperty('enabled')
+                          && scribe.options.enabled.indexOf(commandName) !== -1;
+          
+          if (selection.range && command.queryEnabled() && enabled) {
             button.removeAttribute('disabled');
           } else {
             button.setAttribute('disabled', 'disabled');
