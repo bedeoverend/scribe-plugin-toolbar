@@ -2,12 +2,18 @@ define(function () {
 
   'use strict';
 
+  var focusedElement = null;
+
   return function (toolbarNode) {
     return function (scribe) {
       var buttons = toolbarNode.querySelectorAll('[data-command-name]');
 
       Array.prototype.forEach.call(buttons, function (button) {
         button.addEventListener('click', function () {
+          if (scribe.el !== focusedElement) {
+            return;
+          }
+
           // Look for a predefined command.
           var command = scribe.getCommand(button.dataset.commandName);
 
@@ -25,6 +31,10 @@ define(function () {
            * command is executed.
            * As per: http://jsbin.com/papi/1/edit?html,js,output
            */
+        });
+
+        scribe.el.addEventListener('focus', function() {
+          focusedElement = scribe.el;
         });
 
         // Keep the state of toolbar buttons in sync with the current selection.
@@ -55,7 +65,7 @@ define(function () {
 
           var enabled = scribe.options.hasOwnProperty('enabled')
                           && scribe.options.enabled.indexOf(commandName) !== -1;
-          
+
           if (selection.range && command.queryEnabled() && enabled) {
             button.removeAttribute('disabled');
           } else {
