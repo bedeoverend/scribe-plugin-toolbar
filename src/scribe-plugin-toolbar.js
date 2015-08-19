@@ -6,7 +6,8 @@ define(function () {
 
   return function (toolbarNode) {
     return function (scribe) {
-      var buttons = toolbarNode.querySelectorAll('[data-command-name]');
+      var toolbarDOM = toolbarNode.shadowRoot || toolbarNode,
+          buttons = toolbarDOM.querySelectorAll('[data-command-name]');
 
       Array.prototype.forEach.call(buttons, function (button) {
         button.addEventListener('click', function () {
